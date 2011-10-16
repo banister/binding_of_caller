@@ -1,4 +1,4 @@
-/* (c) 2010 John Mair (banisterfiend), MIT license */
+/* (c) 2011 John Mair (banisterfiend), MIT license */
 
 #include <ruby.h>
 //#include "compat.h"
@@ -19,78 +19,62 @@
 static size_t
 binding_memsize(const void *ptr)
 {
-    return ptr ? sizeof(rb_binding_t) : 0;
+  return ptr ? sizeof(rb_binding_t) : 0;
 }
 
 static void
 binding_free(void *ptr)
 {
-    rb_binding_t *bind;
-    RUBY_FREE_ENTER("binding");
-    if (ptr) {
-	bind = ptr;
-	ruby_xfree(ptr);
-    }
-    RUBY_FREE_LEAVE("binding");
+  rb_binding_t *bind;
+  RUBY_FREE_ENTER("binding");
+  if (ptr) {
+    bind = ptr;
+    ruby_xfree(ptr);
+  }
+  RUBY_FREE_LEAVE("binding");
 }
 
 static void
 binding_mark(void *ptr)
 {
-    rb_binding_t *bind;
-    RUBY_MARK_ENTER("binding");
-    if (ptr) {
-	bind = ptr;
-	RUBY_MARK_UNLESS_NULL(bind->env);
-	RUBY_MARK_UNLESS_NULL(bind->filename);
-    }
-    RUBY_MARK_LEAVE("binding");
+  rb_binding_t *bind;
+  RUBY_MARK_ENTER("binding");
+  if (ptr) {
+    bind = ptr;
+    RUBY_MARK_UNLESS_NULL(bind->env);
+    RUBY_MARK_UNLESS_NULL(bind->filename);
+  }
+  RUBY_MARK_LEAVE("binding");
 }
 
 static const rb_data_type_t binding_data_type = {
-    "binding",
-    binding_mark,
-    binding_free,
-    binding_memsize,
+  "binding",
+  binding_mark,
+  binding_free,
+  binding_memsize,
 };
 
 static VALUE
 binding_alloc(VALUE klass)
 {
-    VALUE obj;
-    rb_binding_t *bind;
-    obj = TypedData_Make_Struct(klass, rb_binding_t, &binding_data_type, bind);
-    return obj;
+  VALUE obj;
+  rb_binding_t *bind;
+  obj = TypedData_Make_Struct(klass, rb_binding_t, &binding_data_type, bind);
+  return obj;
 }
 
-static rb_control_frame_t *
-vm_get_ruby_level_caller_cfp(rb_thread_t *th, rb_control_frame_t *cfp)
-{
-    if (RUBY_VM_NORMAL_ISEQ_P(cfp->iseq)) {
-	return cfp;
-    }
-
-    cfp = RUBY_VM_PREVIOUS_CONTROL_FRAME(cfp);
-
-    while (!RUBY_VM_CONTROL_FRAME_STACK_OVERFLOW_P(th, cfp)) {
-	if (RUBY_VM_NORMAL_ISEQ_P(cfp->iseq)) {
-	    return cfp;
-	}
-
-	if ((cfp->flag & VM_FRAME_FLAG_PASSED) == 0) {
-	    break;
-	}
-	cfp = RUBY_VM_PREVIOUS_CONTROL_FRAME(cfp);
-    }
-    return 0;
-}
-
-
-static VALUE hello(VALUE self)
+static VALUE binding_of_caller(VALUE self, VALUE rb_level)
 {
   rb_thread_t *th = GET_THREAD();
-  rb_control_frame_t *cfp = RUBY_VM_PREVIOUS_CONTROL_FRAME(RUBY_VM_PREVIOUS_CONTROL_FRAME(th->cfp));
-  //vm_get_ruby_level_caller_cfp(th,  RUBY_VM_PREVIOUS_CONTROL_FRAME(RUBY_VM_PREVIOUS_CONTROL_FRAME(RUBY_VM_PREVIOUS_CONTROL_FRAME(th->cfp))));
+  rb_control_frame_t *cfp = RUBY_VM_PREVIOUS_CONTROL_FRAME(th->cfp);
+  int level = FIX2INT(rb_level);
+
+  for (int i = 0; i < level; i++)
+    cfp = RUBY_VM_PREVIOUS_CONTROL_FRAME(cfp);
+
+  if (!cfp->iseq || NIL_P(cfp->self))
+    rb_raise(rb_eRuntimeError, "No valid stack frame found.");
+
   VALUE bindval = binding_alloc(rb_cBinding);
   rb_binding_t *bind;
 
@@ -107,10 +91,8 @@ static VALUE hello(VALUE self)
 
 void
 Init_binding_of_caller()
-    {
-      //  VALUE cBindingOfCaller = rb_define_module("BindingOfCaller");
-
-  rb_define_method(rb_cObject, "binding_of_caller", hello, 0);
+{
+  rb_define_method(rb_cObject, "binding_of_caller", binding_of_caller, 1);
 
 }
 
