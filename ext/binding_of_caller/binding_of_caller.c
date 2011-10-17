@@ -1,20 +1,15 @@
 /* (c) 2011 John Mair (banisterfiend), MIT license */
 
 #include <ruby.h>
-//#include "compat.h"
 
-//#ifdef RUBY_19
 # include <ruby/io.h>
 # include <ruby/re.h>
 # include "vm_core.h"
 # include "gc.h"
-/* #else */
-/* # include "re.h" */
-/* # include "env.h" */
-/* # include "node.h" */
-/* # include "rubysig.h" */
-/* # include "rubyio.h" */
-/* #endif */
+
+typedef enum { false, true } bool;
+
+const int max_frame_errors = 4;
 
 static size_t
 binding_memsize(const void *ptr)
@@ -63,8 +58,6 @@ binding_alloc(VALUE klass)
   return obj;
 }
 
-typedef enum { false, true } bool;
-
 static bool valid_frame_p(rb_control_frame_t * cfp) {
   return cfp->iseq && !NIL_P(cfp->self);
 }
@@ -72,7 +65,7 @@ static bool valid_frame_p(rb_control_frame_t * cfp) {
 static rb_control_frame_t * find_valid_frame(rb_control_frame_t * cfp) {
   int error_count = 0;
 
-  while (error_count <= 4) {
+  while (error_count <= max_frame_errors) {
     cfp = RUBY_VM_PREVIOUS_CONTROL_FRAME(cfp);
 
     if (valid_frame_p(cfp))
@@ -93,9 +86,11 @@ static VALUE binding_of_caller(VALUE self, VALUE rb_level)
   rb_control_frame_t *cfp = RUBY_VM_PREVIOUS_CONTROL_FRAME(th->cfp);
   int level = FIX2INT(rb_level);
 
+  // attempt to locate the nth parent control frame
   for (int i = 0; i < level; i++)
     cfp = RUBY_VM_PREVIOUS_CONTROL_FRAME(cfp);
 
+  // if did not find a valid one, then search for a valid one
   if (!valid_frame_p(cfp))
     cfp = find_valid_frame(cfp);
 
@@ -116,6 +111,9 @@ static VALUE binding_of_caller(VALUE self, VALUE rb_level)
 void
 Init_binding_of_caller()
 {
-  rb_define_method(rb_cObject, "binding_of_caller", binding_of_caller, 1);
+  VALUE mBindingOfCaller = rb_define_module("BindingOfCaller");
+
+  rb_define_method(mBindingOfCaller, "of_caller", binding_of_caller, 1);
+  rb_include_module(rb_cBinding, mBindingOfCaller);
 }
 
