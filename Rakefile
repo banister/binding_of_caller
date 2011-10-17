@@ -15,7 +15,7 @@ CLEAN.include("ext/**/*.#{dlext}", "ext/**/*.log", "ext/**/*.o",
 
 def apply_spec_defaults(s)
   s.name = PROJECT_NAME
-  s.summary = "FIX ME"
+  s.summary = "Retrieve the binding of a method's caller. Can also retrieve bindings even further up the stack. Currently only works for MRI 1.9.2."
   s.version = BindingOfCaller::VERSION
   s.date = Time.now.strftime '%Y-%m-%d'
   s.author = "John Mair (banisterfiend)"
@@ -23,7 +23,7 @@ def apply_spec_defaults(s)
   s.description = s.summary
   s.require_path = 'lib'
   s.add_development_dependency("bacon","~>1.1.0")
-  s.homepage = "http://banisterfiend.wordpress.com"
+  s.homepage = "http://github.com/banister/binding_of_caller"
   s.has_rdoc = 'yard'
   s.files = `git ls-files`.split("\n")
   s.test_files = `git ls-files -- test/*`.split("\n")
@@ -32,6 +32,11 @@ end
 desc "Run tests"
 task :test do
   sh "bacon -Itest -rubygems test.rb -q"
+end
+
+task :pry do
+  puts "loading binding_of_caller into pry"
+  sh "pry -r ./lib/binding_of_caller"
 end
 
 namespace :ruby do
@@ -59,6 +64,8 @@ end
 
 desc "build all platform gems at once"
 task :gems => [:clean, :rmgems, "ruby:gem"]
+
+task :gem => [:gems]
 
 desc "remove all platform gems"
 task :rmgems => ["ruby:clobber_package"]
