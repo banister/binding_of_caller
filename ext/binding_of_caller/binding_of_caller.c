@@ -63,6 +63,30 @@ binding_alloc(VALUE klass)
   return obj;
 }
 
+typedef enum { false, true } bool;
+
+static bool valid_frame_p(rb_control_frame_t * cfp) {
+  return cfp->iseq && !NIL_P(cfp->self);
+}
+
+static rb_control_frame_t * find_valid_frame(rb_control_frame_t * cfp) {
+  int error_count = 0;
+
+  while (error_count <= 4) {
+    cfp = RUBY_VM_PREVIOUS_CONTROL_FRAME(cfp);
+
+    if (valid_frame_p(cfp))
+      return cfp;
+    else
+      error_count += 1;
+  }
+
+  rb_raise(rb_eRuntimeError, "No valid stack frame found.");
+
+  // never reached
+  return 0;
+}
+
 static VALUE binding_of_caller(VALUE self, VALUE rb_level)
 {
   rb_thread_t *th = GET_THREAD();
@@ -72,8 +96,8 @@ static VALUE binding_of_caller(VALUE self, VALUE rb_level)
   for (int i = 0; i < level; i++)
     cfp = RUBY_VM_PREVIOUS_CONTROL_FRAME(cfp);
 
-  if (!cfp->iseq || NIL_P(cfp->self))
-    rb_raise(rb_eRuntimeError, "No valid stack frame found.");
+  if (!valid_frame_p(cfp))
+    cfp = find_valid_frame(cfp);
 
   VALUE bindval = binding_alloc(rb_cBinding);
   rb_binding_t *bind;

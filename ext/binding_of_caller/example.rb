@@ -23,11 +23,13 @@ class B
     puts binding_of_caller(1).eval('local_variables')
     puts binding_of_caller(2).eval('local_variables')
     puts binding_of_caller(3).eval('local_variables')
-    puts binding_of_caller(4).eval('local_variables')
+    puts binding_of_caller(400).eval('local_variables')
   end
 end
 
-Z.new.z
+def a; b; end; def b; binding_of_caller(10); end; a;
+
+# Z.new.z
 
 # output:
 # => x
