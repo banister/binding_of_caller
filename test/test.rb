@@ -17,5 +17,43 @@ describe BindingOfCaller do
 
    o. a.should == 1
   end
+
+  it "should fetch parent of caller's binding when 1 is passed" do
+    o = Object.new
+    def o.a
+      var = 1
+      b
+    end
+
+    def o.b
+      binding.of_caller(1).eval('var')
+    end
+
+   o.a.should == 1
+  end
+
+  it "should modify locals in parent of caller's binding" do
+    o = Object.new
+    def o.a
+      var = 1
+      b
+      var
+    end
+
+    def o.b
+      binding.of_caller(1).eval('var = 20')
+    end
+
+   o.a.should == 20
+  end
+
+  it "should raise an exception when retrieving an out of band binding" do
+    o = Object.new
+    def o.a
+      binding.of_caller(100)
+    end
+
+    lambda { o.a }.should.raise RuntimeError
+  end
 end
 
