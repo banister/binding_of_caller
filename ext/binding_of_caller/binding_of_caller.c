@@ -117,6 +117,5 @@ void
 Init_binding_of_caller()
 {
   rb_define_method(rb_cObject, "binding_of_caller", binding_of_caller, 1);
-
 }
 
