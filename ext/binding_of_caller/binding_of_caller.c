@@ -2,10 +2,10 @@
 
 #include <ruby.h>
 
-# include <ruby/io.h>
-# include <ruby/re.h>
-# include "vm_core.h"
-# include "gc.h"
+#include <ruby/io.h>
+#include <ruby/re.h>
+#include "vm_core.h"
+#include "gc.h"
 
 typedef enum { false, true } bool;
 

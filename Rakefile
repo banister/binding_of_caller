@@ -72,7 +72,7 @@ task :rmgems => ["ruby:clobber_package"]
 
 desc "build and push latest gems"
 task :pushgems => :gems do
-  chdir("#{direc}/pkg") do
+  chdir("./pkg") do
     Dir["*.gem"].each do |gemfile|
       sh "gem push #{gemfile}"
     end
