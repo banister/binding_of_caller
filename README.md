@@ -42,6 +42,11 @@ a()
 # => hello
 ```
 
+Spinoff project
+-------
+
+This project is a spinoff from the [Pry REPL project.](http://pry.github.com)
+
 Features and limitations
 -------------------------
 
