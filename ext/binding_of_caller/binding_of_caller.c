@@ -87,12 +87,13 @@ static VALUE binding_of_caller(VALUE self, VALUE rb_level)
   int level = FIX2INT(rb_level);
 
   // attempt to locate the nth parent control frame
-  for (int i = 0; i < level; i++)
+  for (int i = 0; i < level; i++) {
     cfp = RUBY_VM_PREVIOUS_CONTROL_FRAME(cfp);
 
-  // if did not find a valid one, then search for a valid one
-  if (!valid_frame_p(cfp))
-    cfp = find_valid_frame(cfp);
+    // skip invalid frames
+    if (!valid_frame_p(cfp))
+      cfp = find_valid_frame(cfp);
+  }
 
   VALUE bindval = binding_alloc(rb_cBinding);
   rb_binding_t *bind;
