@@ -21,31 +21,32 @@ call stack, not limited to just the immediate caller.
 Example: Modifying a local inside the caller of a caller
 --------
 
-    def a
-      var = 10
-      b
-      puts var
-    end
+```ruby
+def a
+  var = 10
+  b
+  puts var
+end
 
-    def b
-      c
-    end
+def b
+  c
+end
 
-    def c
-      binding.of_caller(2).eval('var = :hello')
-    end
+def c
+  binding.of_caller(2).eval('var = :hello')
+end
 
-    a()
+a()
 
-    # OUTPUT
-    # => hello
+# OUTPUT
+# => hello
+```
 
 Features and limitations
 -------------------------
 
 * Only works with MRI 1.9.2
-* Broken in 1.9.3, support will hopefully be provided in the near
-* future.
+* Broken in 1.9.3, support will hopefully be provided in the near future.
 * Does not work in 1.8.7, but there is a well known (continuation-based) hack to get a `Binding#of_caller` there.
 
 Contact
