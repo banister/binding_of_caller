@@ -3,25 +3,50 @@ binding_of_caller
 
 (C) John Mair (banisterfiend) 2011
 
-FIXME: _tagline_
+_Retrieve the binding of a method's caller in MRI 1.9.2_
 
-FIXME: _description goes here_
+The `binding_of_caller` gem provides the `Binding#of_caller` method.
+
+Using `binding_of_caller` we can grab bindings from higher up the call
+stack and evaluate code in that context. Allows access to bindings arbitrarily far up the
+call stack, not limited to just the immediate caller.
+
+**Recommended for use only in debugging situations. Do not use this in production apps.**
+
+**Only works in MRI Ruby 1.9.2**
 
 * Install the [gem](https://rubygems.org/gems/binding_of_caller): `gem install binding_of_caller`
-* Read the [documentation](http://rdoc.info/github/banister/binding_of_caller/master/file/README.markdown)
 * See the [source code](http://github.com/banister/binding_of_caller)
 
-Example: Example description
+Example: Modifying a local inside the caller of a caller
 --------
 
-Example preamble
+    def a
+      var = 10
+      b
+      puts var
+    end
 
-    puts "example code"
+    def b
+      c
+    end
+
+    def c
+      binding.of_caller(2).eval('var = :hello')
+    end
+
+    a()
+
+    # OUTPUT
+    # => hello
 
 Features and limitations
 -------------------------
 
-Feature List Preamble
+* Only works with MRI 1.9.2
+* Broken in 1.9.3, support will hopefully be provided in the near
+* future.
+* Does not work in 1.8.7, but there is a well known (continuation-based) hack to get a `Binding#of_caller` there.
 
 Contact
 -------
@@ -32,7 +57,7 @@ Problems or questions contact me at [github](http://github.com/banister)
 License
 -------
 
-(The MIT License) 
+(The MIT License)
 
 Copyright (c) 2011 (John Mair)
 

@@ -52,7 +52,7 @@ namespace :ruby do
   end
 end
 
-desc "build the biinaries"
+desc "build the binaries"
 task :compile do
   chdir "./ext/#{PROJECT_NAME}/" do
     sh "ruby extconf.rb"
