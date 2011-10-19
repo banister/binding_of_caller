@@ -58,23 +58,24 @@ binding_alloc(VALUE klass)
   return obj;
 }
 
-static bool valid_frame_p(rb_control_frame_t * cfp) {
+static bool valid_frame_p(rb_control_frame_t * cfp, rb_control_frame_t * limit_cfp) {
+  if (cfp > limit_cfp)
+    rb_raise(rb_eRuntimeError, "Invalid frame, gone beyond end of stack!");
+
   return cfp->iseq && !NIL_P(cfp->self);
 }
 
-static rb_control_frame_t * find_valid_frame(rb_control_frame_t * cfp) {
+static rb_control_frame_t * find_valid_frame(rb_control_frame_t * cfp, rb_control_frame_t * limit_cfp) {
   int error_count = 0;
 
   while (error_count <= max_frame_errors) {
     cfp = RUBY_VM_PREVIOUS_CONTROL_FRAME(cfp);
 
-    if (valid_frame_p(cfp))
+    if (valid_frame_p(cfp, limit_cfp))
       return cfp;
     else
       error_count += 1;
   }
-
-  rb_raise(rb_eRuntimeError, "No valid stack frame found.");
 
   // never reached
   return 0;
@@ -84,6 +85,7 @@ static VALUE binding_of_caller(VALUE self, VALUE rb_level)
 {
   rb_thread_t *th = GET_THREAD();
   rb_control_frame_t *cfp = RUBY_VM_PREVIOUS_CONTROL_FRAME(th->cfp);
+  rb_control_frame_t *limit_cfp = (void *)(th->stack + th->stack_size);
   int level = FIX2INT(rb_level);
 
   // attempt to locate the nth parent control frame
@@ -91,8 +93,8 @@ static VALUE binding_of_caller(VALUE self, VALUE rb_level)
     cfp = RUBY_VM_PREVIOUS_CONTROL_FRAME(cfp);
 
     // skip invalid frames
-    if (!valid_frame_p(cfp))
-      cfp = find_valid_frame(cfp);
+    if (!valid_frame_p(cfp, limit_cfp))
+      cfp = find_valid_frame(cfp, limit_cfp);
   }
 
   VALUE bindval = binding_alloc(rb_cBinding);
