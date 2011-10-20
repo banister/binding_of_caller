@@ -1,15 +1,10 @@
 /* (c) 2011 John Mair (banisterfiend), MIT license */
 
 #include <ruby.h>
-
-#include <ruby/io.h>
-#include <ruby/re.h>
 #include "vm_core.h"
 #include "gc.h"
 
 typedef enum { false, true } bool;
-
-const int max_frame_errors = 4;
 
 static size_t
 binding_memsize(const void *ptr)
@@ -66,15 +61,11 @@ static bool valid_frame_p(rb_control_frame_t * cfp, rb_control_frame_t * limit_c
 }
 
 static rb_control_frame_t * find_valid_frame(rb_control_frame_t * cfp, rb_control_frame_t * limit_cfp) {
-  int error_count = 0;
-
-  while (error_count <= max_frame_errors) {
+  while (true) {
     cfp = RUBY_VM_PREVIOUS_CONTROL_FRAME(cfp);
 
     if (valid_frame_p(cfp, limit_cfp))
       return cfp;
-    else
-      error_count += 1;
   }
 
   // never reached
@@ -100,9 +91,8 @@ static VALUE binding_of_caller(VALUE self, VALUE rb_level)
   VALUE bindval = binding_alloc(rb_cBinding);
   rb_binding_t *bind;
 
-  if (cfp == 0) {
+  if (cfp == 0)
     rb_raise(rb_eRuntimeError, "Can't create Binding Object on top of Fiber.");
-  }
 
   GetBindingPtr(bindval, bind);
   bind->env = rb_vm_make_env_object(th, cfp);
