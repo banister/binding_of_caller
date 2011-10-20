@@ -1,8 +1,16 @@
 /* (c) 2011 John Mair (banisterfiend), MIT license */
 
-#include <ruby.h>
-#include "vm_core.h"
-#include "gc.h"
+#ifdef RUBY_192
+# include <ruby.h>
+# include "vm_core.h"
+# include "gc.h"
+#elif defined(RUBY_187)
+# include "re.h"
+# include "env.h"
+# include "node.h"
+# include "rubysig.h"
+# include "rubyio.h"
+#endif
 
 typedef enum { false, true } bool;
 
