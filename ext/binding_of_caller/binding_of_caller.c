@@ -292,8 +292,41 @@ rb_f_binding(VALUE self)
     struct BLOCK *data, *p;
     struct RVarmap *vars;
     VALUE bind;
+    int v, b;
+    v = 0;
+    b = 0;
 
-    PUSH_BLOCK(0,0);
+    //    PUSH_BLOCK(0,0);
+    /* before inline */
+
+  struct BLOCK _block;                          \
+  _block.var = (v);                             \
+  _block.body = (b);                            \
+  _block.self = self;                           \
+  _block.frame = *ruby_frame;                   \
+  _block.klass = ruby_class;                    \
+  _block.cref = ruby_cref;                      \
+  _block.frame.node = ruby_current_node;        \
+  _block.scope = ruby_scope;                    \
+  _block.prev = ruby_block;                     \
+  _block.outer = ruby_block;                    \
+  _block.iter = ruby_iter->iter;                \
+  _block.vmode = scope_vmode;                   \
+  _block.flags = BLOCK_D_SCOPE;                 \
+  _block.dyna_vars = ruby_dyna_vars;            \
+  _block.wrapper = ruby_wrapper;                \
+  _block.block_obj = 0;                         \
+  _block.uniq = (b)?block_unique++:0;           \
+  if (b) {                                      \
+    prot_tag->blkid = _block.uniq;              \
+  }                                             \
+  ruby_block = &_block;
+    
+
+    /* after inline */
+
+
+    
     bind = Data_Make_Struct(rb_cBinding,struct BLOCK,blk_mark,blk_free,data);
     *data = *ruby_block;
 
