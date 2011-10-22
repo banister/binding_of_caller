@@ -54,7 +54,7 @@ binding_alloc(VALUE klass)
 }
 
 static bool valid_frame_p(rb_control_frame_t * cfp, rb_control_frame_t * limit_cfp) {
-  if (cfp > limit_cfp)
+  if (cfp >= limit_cfp)
     rb_raise(rb_eRuntimeError, "Invalid frame, gone beyond end of stack!");
 
   return cfp->iseq && !NIL_P(cfp->self);
