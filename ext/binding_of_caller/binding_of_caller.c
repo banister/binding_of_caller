@@ -6,6 +6,12 @@
 
 typedef enum { false, true } bool;
 
+static VALUE
+string2sym(const char * string)
+{
+  return ID2SYM(rb_intern(string));
+}
+
 static size_t
 binding_memsize(const void *ptr)
 {
@@ -54,22 +60,22 @@ binding_alloc(VALUE klass)
 }
 
 static bool valid_frame_p(rb_control_frame_t * cfp, rb_control_frame_t * limit_cfp) {
-  if (cfp >= limit_cfp)
-    rb_raise(rb_eRuntimeError, "Invalid frame, gone beyond end of stack!");
-
   return cfp->iseq && !NIL_P(cfp->self);
 }
 
 static rb_control_frame_t * find_valid_frame(rb_control_frame_t * cfp, rb_control_frame_t * limit_cfp) {
-  while (true) {
+  while (cfp < limit_cfp) {
     cfp = RUBY_VM_PREVIOUS_CONTROL_FRAME(cfp);
+
+    if (cfp >= limit_cfp)
+      return NULL;
 
     if (valid_frame_p(cfp, limit_cfp))
       return cfp;
   }
 
-  // never reached
-  return 0;
+  // beyond end of stack
+  return NULL;
 }
 
 static VALUE binding_of_caller(VALUE self, VALUE rb_level)
@@ -82,6 +88,9 @@ static VALUE binding_of_caller(VALUE self, VALUE rb_level)
   // attempt to locate the nth parent control frame
   for (int i = 0; i < level; i++) {
     cfp = RUBY_VM_PREVIOUS_CONTROL_FRAME(cfp);
+
+    if (cfp >= limit_cfp)
+      rb_raise(rb_eRuntimeError, "Invalid frame, gone beyond end of stack!");
 
     // skip invalid frames
     if (!valid_frame_p(cfp, limit_cfp))
@@ -98,7 +107,70 @@ static VALUE binding_of_caller(VALUE self, VALUE rb_level)
   bind->env = rb_vm_make_env_object(th, cfp);
   bind->filename = cfp->iseq->filename;
   bind->line_no = rb_vm_get_sourceline(cfp);
+
+  rb_iv_set(bindval, "@frame_type", cfp->flag);
   return bindval;
+}
+
+
+static VALUE
+frametype_name(VALUE flag)
+{
+  switch (flag & VM_FRAME_MAGIC_MASK) {
+  case VM_FRAME_MAGIC_METHOD: return string2sym("method");
+  case VM_FRAME_MAGIC_BLOCK:  return string2sym("block");
+  case VM_FRAME_MAGIC_CLASS:  return string2sym("class");
+  case VM_FRAME_MAGIC_TOP:    return string2sym("top");
+  case VM_FRAME_MAGIC_FINISH: return string2sym("finish");
+  case VM_FRAME_MAGIC_CFUNC:  return string2sym("cfunc");
+  case VM_FRAME_MAGIC_PROC:   return string2sym("proc");
+  case VM_FRAME_MAGIC_IFUNC:  return string2sym("ifunc");
+  case VM_FRAME_MAGIC_EVAL:   return string2sym("eval");
+  case VM_FRAME_MAGIC_LAMBDA: return string2sym("lambda");
+  default:
+    rb_raise(rb_eRuntimeError, "frame_type can only be returned for bindings created with Binding#of_caller().");
+  }
+}
+
+static VALUE
+frame_type(VALUE self)
+{
+  return frametype_name(rb_iv_get(self, "@frame_type"));
+}
+
+static VALUE frame_count(VALUE self)
+{
+  rb_thread_t *th = GET_THREAD();
+  rb_control_frame_t *cfp = RUBY_VM_PREVIOUS_CONTROL_FRAME(th->cfp);
+  rb_control_frame_t *limit_cfp = (void *)(th->stack + th->stack_size);
+
+  // attempt to locate the nth parent control frame
+  int i = 1;
+  while (cfp < limit_cfp) {
+    cfp = RUBY_VM_PREVIOUS_CONTROL_FRAME(cfp);
+
+    if (cfp >= limit_cfp)
+      return INT2FIX(i);
+
+    // skip invalid frames
+    if (!valid_frame_p(cfp, limit_cfp))
+      cfp = find_valid_frame(cfp, limit_cfp);
+
+    i++;
+  }
+
+  return INT2FIX(i);
+}
+
+static VALUE
+callers(VALUE self)
+{
+  VALUE ary = rb_ary_new();
+
+  for (int i = 0; i < FIX2INT(frame_count(self)); i++)
+    rb_ary_push(ary, binding_of_caller(self, INT2FIX(i)));
+
+  return ary;
 }
 
 void
@@ -107,6 +179,9 @@ Init_binding_of_caller()
   VALUE mBindingOfCaller = rb_define_module("BindingOfCaller");
 
   rb_define_method(mBindingOfCaller, "of_caller", binding_of_caller, 1);
+  rb_define_method(mBindingOfCaller, "frame_count", frame_count, 0);
+  rb_define_method(mBindingOfCaller, "frame_type", frame_type, 0);
+  rb_define_method(mBindingOfCaller, "callers", callers, 0);
   rb_include_module(rb_cBinding, mBindingOfCaller);
 }
 
