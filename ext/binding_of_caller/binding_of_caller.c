@@ -12,6 +12,21 @@ string2sym(const char * string)
   return ID2SYM(rb_intern(string));
 }
 
+static inline const rb_data_type_t *
+threadptr_data_type(void)
+{
+  static const rb_data_type_t *thread_data_type;
+  if (!thread_data_type) {
+    VALUE current_thread = rb_thread_current();
+    thread_data_type = RTYPEDDATA_TYPE(current_thread);
+  }
+  return thread_data_type;
+}
+
+#define ruby_thread_data_type *threadptr_data_type()
+
+#define ruby_current_thread ((rb_thread_t *)RTYPEDDATA_DATA(rb_thread_current()))
+
 static size_t
 binding_memsize(const void *ptr)
 {
@@ -80,7 +95,9 @@ static rb_control_frame_t * find_valid_frame(rb_control_frame_t * cfp, rb_contro
 
 static VALUE binding_of_caller(VALUE self, VALUE rb_level)
 {
-  rb_thread_t *th = GET_THREAD();
+  rb_thread_t *th;
+  GetThreadPtr(rb_thread_current(), th);
+
   rb_control_frame_t *cfp = RUBY_VM_PREVIOUS_CONTROL_FRAME(th->cfp);
   rb_control_frame_t *limit_cfp = (void *)(th->stack + th->stack_size);
   int level = FIX2INT(rb_level);
@@ -140,11 +157,12 @@ frame_type(VALUE self)
 
 static VALUE frame_count(VALUE self)
 {
-  rb_thread_t *th = GET_THREAD();
+  rb_thread_t *th;
+  GetThreadPtr(rb_thread_current(), th);
+
   rb_control_frame_t *cfp = RUBY_VM_PREVIOUS_CONTROL_FRAME(th->cfp);
   rb_control_frame_t *limit_cfp = (void *)(th->stack + th->stack_size);
 
-  // attempt to locate the nth parent control frame
   int i = 1;
   while (cfp < limit_cfp) {
     cfp = RUBY_VM_PREVIOUS_CONTROL_FRAME(cfp);
