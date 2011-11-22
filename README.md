@@ -13,7 +13,7 @@ call stack, not limited to just the immediate caller.
 
 **Recommended for use only in debugging situations. Do not use this in production apps.**
 
-**Only works in MRI Ruby 1.9.2**
+**Only works in MRI Ruby 1.9.2 and 1.9.3**
 
 * Install the [gem](https://rubygems.org/gems/binding_of_caller): `gem install binding_of_caller`
 * See the [source code](http://github.com/banister/binding_of_caller)
@@ -50,8 +50,7 @@ This project is a spinoff from the [Pry REPL project.](http://pry.github.com)
 Features and limitations
 -------------------------
 
-* Only works with MRI 1.9.2
-* Broken in 1.9.3, support will hopefully be provided in the near future.
+* Only works with MRI 1.9.2 and 1.9.3
 * Does not work in 1.8.7, but there is a well known (continuation-based) hack to get a `Binding#of_caller` there.
 
 Contact
