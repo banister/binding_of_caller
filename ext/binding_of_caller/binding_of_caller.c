@@ -93,6 +93,25 @@ static rb_control_frame_t * find_valid_frame(rb_control_frame_t * cfp, rb_contro
   return NULL;
 }
 
+static VALUE
+frametype_name(VALUE flag)
+{
+  switch (flag & VM_FRAME_MAGIC_MASK) {
+  case VM_FRAME_MAGIC_METHOD: return string2sym("method");
+  case VM_FRAME_MAGIC_BLOCK:  return string2sym("block");
+  case VM_FRAME_MAGIC_CLASS:  return string2sym("class");
+  case VM_FRAME_MAGIC_TOP:    return string2sym("top");
+  case VM_FRAME_MAGIC_FINISH: return string2sym("finish");
+  case VM_FRAME_MAGIC_CFUNC:  return string2sym("cfunc");
+  case VM_FRAME_MAGIC_PROC:   return string2sym("proc");
+  case VM_FRAME_MAGIC_IFUNC:  return string2sym("ifunc");
+  case VM_FRAME_MAGIC_EVAL:   return string2sym("eval");
+  case VM_FRAME_MAGIC_LAMBDA: return string2sym("lambda");
+  default:
+    rb_raise(rb_eRuntimeError, "Unknown frame type! got flag: %d", FIX2INT(flag));
+  }
+}
+
 static VALUE binding_of_caller(VALUE self, VALUE rb_level)
 {
   rb_thread_t *th;
@@ -125,34 +144,22 @@ static VALUE binding_of_caller(VALUE self, VALUE rb_level)
   bind->filename = cfp->iseq->filename;
   bind->line_no = rb_vm_get_sourceline(cfp);
 
-  rb_iv_set(bindval, "@frame_type", cfp->flag);
+  rb_iv_set(bindval, "@frame_type", frametype_name(cfp->flag));
+  rb_iv_set(bindval, "@frame_description", cfp->iseq->name);
+
   return bindval;
-}
-
-
-static VALUE
-frametype_name(VALUE flag)
-{
-  switch (flag & VM_FRAME_MAGIC_MASK) {
-  case VM_FRAME_MAGIC_METHOD: return string2sym("method");
-  case VM_FRAME_MAGIC_BLOCK:  return string2sym("block");
-  case VM_FRAME_MAGIC_CLASS:  return string2sym("class");
-  case VM_FRAME_MAGIC_TOP:    return string2sym("top");
-  case VM_FRAME_MAGIC_FINISH: return string2sym("finish");
-  case VM_FRAME_MAGIC_CFUNC:  return string2sym("cfunc");
-  case VM_FRAME_MAGIC_PROC:   return string2sym("proc");
-  case VM_FRAME_MAGIC_IFUNC:  return string2sym("ifunc");
-  case VM_FRAME_MAGIC_EVAL:   return string2sym("eval");
-  case VM_FRAME_MAGIC_LAMBDA: return string2sym("lambda");
-  default:
-    rb_raise(rb_eRuntimeError, "frame_type can only be returned for bindings created with Binding#of_caller().");
-  }
 }
 
 static VALUE
 frame_type(VALUE self)
 {
-  return frametype_name(rb_iv_get(self, "@frame_type"));
+  return rb_iv_get(self, "@frame_type");
+}
+
+static VALUE
+frame_description(VALUE self)
+{
+  return rb_iv_get(self, "@frame_description");
 }
 
 static VALUE frame_count(VALUE self)
@@ -199,6 +206,7 @@ Init_binding_of_caller()
   rb_define_method(mBindingOfCaller, "of_caller", binding_of_caller, 1);
   rb_define_method(mBindingOfCaller, "frame_count", frame_count, 0);
   rb_define_method(mBindingOfCaller, "frame_type", frame_type, 0);
+  rb_define_method(mBindingOfCaller, "frame_description", frame_description, 0);
   rb_define_method(mBindingOfCaller, "callers", callers, 0);
   rb_include_module(rb_cBinding, mBindingOfCaller);
 }
