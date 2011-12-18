@@ -181,6 +181,9 @@ static VALUE frame_count(VALUE self)
     if (!valid_frame_p(cfp, limit_cfp))
       cfp = find_valid_frame(cfp, limit_cfp);
 
+    if (!cfp)
+      break;
+
     i++;
   }
 
