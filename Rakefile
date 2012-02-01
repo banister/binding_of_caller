@@ -15,16 +15,17 @@ CLEAN.include("ext/**/*.#{dlext}", "ext/**/*.log", "ext/**/*.o",
 
 def apply_spec_defaults(s)
   s.name = PROJECT_NAME
-  s.summary = "Retrieve the binding of a method's caller. Can also retrieve bindings even further up the stack. Currently only works for MRI 1.9.2."
+  s.summary = "Retrieve the binding of a method's caller. Can also retrieve bindings even further up the stack. Currently only works for MRI 1.9.2+"
   s.version = BindingOfCaller::VERSION
   s.date = Time.now.strftime '%Y-%m-%d'
   s.author = "John Mair (banisterfiend)"
   s.email = 'jrmair@gmail.com'
   s.description = s.summary
   s.require_path = 'lib'
-  s.add_development_dependency("bacon","~>1.1.0")
+  s.add_development_dependency("bacon","~>1.1")
   s.homepage = "http://github.com/banister/binding_of_caller"
   s.has_rdoc = 'yard'
+  s.required_ruby_version = '>= 1.9.2'
   s.files = `git ls-files`.split("\n")
   s.test_files = `git ls-files -- test/*`.split("\n")
 end

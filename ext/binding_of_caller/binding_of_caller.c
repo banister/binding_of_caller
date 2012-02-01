@@ -53,7 +53,11 @@ binding_mark(void *ptr)
   if (ptr) {
     bind = ptr;
     RUBY_MARK_UNLESS_NULL(bind->env);
+
+#ifdef RUBY_192
     RUBY_MARK_UNLESS_NULL(bind->filename);
+#endif
+
   }
   RUBY_MARK_LEAVE("binding");
 }

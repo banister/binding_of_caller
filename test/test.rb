@@ -86,9 +86,6 @@ describe BindingOfCaller do
       caller_bindings[2].frame_type.should == :method
     end
 
-    it 'should raise when invoked on an ordinary binding (i.e one not generated through Binding#of_caller)' do
-      lambda { binding.frame_type }.should.raise RuntimeError
-    end
   end
 end
 
