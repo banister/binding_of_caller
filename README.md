@@ -3,7 +3,7 @@ binding_of_caller
 
 (C) John Mair (banisterfiend) 2011
 
-_Retrieve the binding of a method's caller in MRI 1.9.2_
+_Retrieve the binding of a method's caller in MRI 1.9.2+_
 
 The `binding_of_caller` gem provides the `Binding#of_caller` method.
 
