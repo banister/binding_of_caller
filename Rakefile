@@ -13,7 +13,7 @@ require "#{PROJECT_NAME}/version"
 CLOBBER.include("**/*.#{dlext}", "**/*~", "**/*#*", "**/*.log", "**/*.o")
 CLEAN.include("ext/**/*.#{dlext}", "ext/**/*.log", "ext/**/*.o",
               "ext/**/*~", "ext/**/*#*", "ext/**/*.obj", "**/*#*", "**/*#*.*",
-              "ext/**/*.def", "ext/**/*.pdb", "**/*_flymake*.*", "**/*_flymake")
+              "ext/**/*.def", "ext/**/*.pdb", "**/*_flymake*.*", "**/*_flymake", "**/*.rbc")
 
 def apply_spec_defaults(s)
   s.name = PROJECT_NAME
@@ -67,7 +67,7 @@ end
 namespace :rbx do
   spec = Gem::Specification.new do |s|
     apply_spec_defaults(s)
-    s.platform = Gem::Platform::RUBY
+    s.platform = Gem::Platform.new(["universal", "rubinius"])
   end
 
   Gem::PackageTask.new(spec) do |pkg|

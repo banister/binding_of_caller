@@ -9,11 +9,24 @@ elsif defined?(Rubinius)
 
       def of_caller(n)
         bt = Rubinius::VM.backtrace(1 + n, true).first
-        Binding.setup(
+
+        b = Binding.setup(
                       bt.variables,
                       bt.variables.method,
-                      bt.static_scope
+                      bt.static_scope,
+                      bt.variables.self,
+                      bt
                       )
+
+        b.instance_variable_set(:@frame_description, bt.describe)
+
+        b
+        rescue
+          raise RuntimeError, "Invalid frame, gone beyond end of stack!"
+      end
+
+      def frame_description
+        @frame_description
       end
 
       def callers
@@ -49,11 +62,14 @@ elsif defined?(Rubinius)
       end
 
       def frame_type
-        "unknown"
-      end
-
-      def frame_description
-        "no desc"
+        case self.variables.method.metadata.to_a.first.to_s
+        when /block/
+          :block
+        when /eval/
+          :eval
+        else
+          :method
+        end
       end
 
     end
