@@ -49,7 +49,7 @@ task :test do
   $stdout.puts("\033[33m")
   sh "bacon -Itest -rubygems -a -q"
   $stdout.puts("\033[0m")
-  
+
   unless defined?(Rubinius)
     Rake::Task['cleanup'].execute
   end
