@@ -17,7 +17,7 @@ CLEAN.include("ext/**/*.#{dlext}", "ext/**/*.log", "ext/**/*.o",
 
 def apply_spec_defaults(s)
   s.name = PROJECT_NAME
-  s.summary = "Retrieve the binding of a method's caller. Can also retrieve bindings even further up the stack. Currently only works for MRI 1.9.2+"
+  s.summary = "Retrieve the binding of a method's caller. Can also retrieve bindings even further up the stack."
   s.version = BindingOfCaller::VERSION
   s.date = Time.now.strftime '%Y-%m-%d'
   s.author = "John Mair (banisterfiend)"
@@ -64,17 +64,17 @@ namespace :ruby do
   end
 end
 
-namespace :rbx do
-  spec = Gem::Specification.new do |s|
-    apply_spec_defaults(s)
-    s.platform = Gem::Platform::RUBY #.new(["universal", "rubinius"])
-  end
+# namespace :rbx do
+#   spec = Gem::Specification.new do |s|
+#     apply_spec_defaults(s)
+#     s.platform = Gem::Platform::RUBY #.new(["universal", "rubinius"])
+#   end
 
-  Gem::PackageTask.new(spec) do |pkg|
-    pkg.need_zip = false
-    pkg.need_tar = false
-  end
-end
+#   Gem::PackageTask.new(spec) do |pkg|
+#     pkg.need_zip = false
+#     pkg.need_tar = false
+#   end
+# end
 
 desc "build the binaries"
 task :compile do
@@ -93,11 +93,9 @@ task :reinstall => :gems do
 end
 
 desc "build all platform gems at once"
-task :gems => [:clean, :rmgems, "ruby:gem", "rbx:gem"]
+task :gems => [:clean, :rmgems, "ruby:gem"]
 
 task :gem => [:gems]
-
-task :rbxgem => "rbx:gem"
 
 desc "remove all platform gems"
 task :rmgems => ["ruby:clobber_package"]

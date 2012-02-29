@@ -46,7 +46,6 @@ elsif defined?(Rubinius)
       end
 
       def frame_count
-        ary = []
         n = 1
         loop {
           begin
