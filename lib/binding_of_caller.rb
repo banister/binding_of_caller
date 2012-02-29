@@ -1,4 +1,4 @@
-dlext = Config::CONFIG['DLEXT']
+dlext = RbConfig::CONFIG['DLEXT']
 direc = File.dirname(__FILE__)
 
 if RUBY_ENGINE && RUBY_ENGINE == "ruby"
