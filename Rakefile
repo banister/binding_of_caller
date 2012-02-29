@@ -31,9 +31,17 @@ def apply_spec_defaults(s)
   s.test_files = `git ls-files -- test/*`.split("\n")
 end
 
+desc "Show version"
+task :version do
+  puts "BindingOfCaller version: #{BindingOfCaller::VERSION}"
+end
+
+desc "run tests"
+task :default => :test
+
 desc "Run tests"
 task :test do
-  sh "bacon -Itest -rubygems test.rb -q"
+  sh "bacon -Itest -rubygems -a -q"
 end
 
 task :pry do
