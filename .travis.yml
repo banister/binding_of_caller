@@ -12,3 +12,12 @@ notifications:
 branches:
   only:
     - master
+
+script: rake test --trace
+
+before_install:
+  - gem update --system
+  - gem --version
+  - gem install rake bacon
+  - rake gem
+  - gem install pkg/*.gem
