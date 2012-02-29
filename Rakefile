@@ -25,6 +25,7 @@ def apply_spec_defaults(s)
   s.description = s.summary
   s.require_path = 'lib'
   s.add_development_dependency("bacon","~>1.1")
+  s.add_development_dependency('rake', '~> 0.9')
   s.homepage = "http://github.com/banister/binding_of_caller"
   s.has_rdoc = 'yard'
   s.files = `git ls-files`.split("\n")
