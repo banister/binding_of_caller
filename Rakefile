@@ -1,5 +1,6 @@
 dlext = RbConfig::CONFIG['DLEXT']
 direc = File.dirname(__FILE__)
+require 'rake/extensiontask'
 
 $:.unshift 'lib'
 
@@ -24,8 +25,9 @@ def apply_spec_defaults(s)
   s.email = 'jrmair@gmail.com'
   s.description = s.summary
   s.require_path = 'lib'
-  s.add_development_dependency("bacon","~>1.1")
-  s.add_development_dependency('rake', '~> 0.9')
+  s.add_development_dependency('bacon')
+  s.add_development_dependency('rake')
+  s.add_development_dependency('rake-compiler')
   s.homepage = "http://github.com/banister/binding_of_caller"
   s.has_rdoc = 'yard'
   s.files = `git ls-files`.split("\n")
@@ -38,11 +40,13 @@ task :version do
 end
 
 desc "run tests"
-task :default => :test
+task :default => [:test]
 
 desc "Run tests"
 task :test do
+  Rake::Task['compile'].execute
   sh "bacon -Itest -rubygems -a -q"
+  Rake::Task['clean'].execute
 end
 
 task :pry do
