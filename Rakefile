@@ -67,7 +67,7 @@ end
 namespace :rbx do
   spec = Gem::Specification.new do |s|
     apply_spec_defaults(s)
-    s.platform = Gem::Platform.new(["universal", "rubinius"])
+    s.platform = Gem::Platform::RUBY #.new(["universal", "rubinius"])
   end
 
   Gem::PackageTask.new(spec) do |pkg|

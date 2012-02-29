@@ -68,7 +68,11 @@ elsif defined?(Rubinius)
         when /eval/
           :eval
         else
-          :method
+          if frame_description =~ /__(?:class|module)_init__/
+            :class
+          else
+            :method
+          end
         end
       end
 
