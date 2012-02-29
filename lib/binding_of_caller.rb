@@ -2,7 +2,7 @@ dlext = Config::CONFIG['DLEXT']
 direc = File.dirname(__FILE__)
 
 if RUBY_ENGINE && RUBY_ENGINE == "ruby"
-  require File.join direc, "binding_of_caller.#{dlext}"
+  require "binding_of_caller.#{dlext}"
 
 elsif defined?(Rubinius)
   module BindingOfCaller
