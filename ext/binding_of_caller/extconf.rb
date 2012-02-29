@@ -4,7 +4,7 @@ def fake_makefile
   }
 end
 
-if defined?(Rubinius)
+if RUBY_ENGINE && RUBY_ENGINE =~ /rbx/
   fake_makefile
 else
   require 'mkmf'
