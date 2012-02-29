@@ -1,6 +1,5 @@
 dlext = RbConfig::CONFIG['DLEXT']
 direc = File.dirname(__FILE__)
-require 'rake/extensiontask'
 
 $:.unshift 'lib'
 
@@ -27,7 +26,6 @@ def apply_spec_defaults(s)
   s.require_path = 'lib'
   s.add_development_dependency('bacon')
   s.add_development_dependency('rake')
-  s.add_development_dependency('rake-compiler')
   s.homepage = "http://github.com/banister/binding_of_caller"
   s.has_rdoc = 'yard'
   s.files = `git ls-files`.split("\n")
@@ -44,9 +42,17 @@ task :default => [:test]
 
 desc "Run tests"
 task :test do
-  Rake::Task['compile'].execute
+  unless defined?(Rubinius)
+    Rake::Task['compile'].execute
+  end
+
+  $stdout.puts("\033[33m")
   sh "bacon -Itest -rubygems -a -q"
-  Rake::Task['clean'].execute
+  $stdout.puts("\033[0m")
+  
+  unless defined?(Rubinius)
+    Rake::Task['cleanup'].execute
+  end
 end
 
 task :pry do
@@ -96,6 +102,14 @@ task :compile do
     sh "make clean"
     sh "make"
     sh "cp *.#{dlext} ../../lib/"
+  end
+end
+
+desc 'cleanup the extensions'
+task :cleanup do
+  sh 'rm -rf lib/binding_of_caller.so'
+  chdir "./ext/#{PROJECT_NAME}/" do
+    sh 'make clean'
   end
 end
 
