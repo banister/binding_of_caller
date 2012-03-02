@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/banister/binding_of_caller.png)](http://travis-ci.org/banister/binding_of_caller)
+
 binding_of_caller
 ===========
 
