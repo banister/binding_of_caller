@@ -58,6 +58,23 @@ describe BindingOfCaller do
     end
   end
 
+  describe "callers" do
+    before do
+      @o = Object.new
+    end
+
+    it 'should return the first non-internal binding when using callers.first' do
+      def @o.meth
+        x = :a_local
+        [binding.callers.first, binding.of_caller(0)]
+      end
+
+      b1, b2 = @o.meth
+      b1.eval("x").should == :a_local
+      b2.eval("x").should == :a_local
+    end
+  end
+
   describe "frame_count" do
     it 'frame_count should equal callers.count' do
       binding.frame_count.should == binding.callers.count

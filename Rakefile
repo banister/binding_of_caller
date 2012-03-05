@@ -83,18 +83,6 @@ namespace :ruby do
   end
 end
 
-# namespace :rbx do
-#   spec = Gem::Specification.new do |s|
-#     apply_spec_defaults(s)
-#     s.platform = Gem::Platform::RUBY #.new(["universal", "rubinius"])
-#   end
-
-#   Gem::PackageTask.new(spec) do |pkg|
-#     pkg.need_zip = false
-#     pkg.need_tar = false
-#   end
-# end
-
 desc "build the binaries"
 task :compile do
   chdir "./ext/#{PROJECT_NAME}/" do
