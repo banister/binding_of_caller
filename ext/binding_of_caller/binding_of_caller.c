@@ -78,8 +78,12 @@ binding_alloc(VALUE klass)
   return obj;
 }
 
+static bool ifunc_p(rb_control_frame_t * cfp) {
+  return (cfp->flag & VM_FRAME_MAGIC_MASK) == VM_FRAME_MAGIC_IFUNC;
+}
+
 static bool valid_frame_p(rb_control_frame_t * cfp, rb_control_frame_t * limit_cfp) {
-  return cfp->iseq && !NIL_P(cfp->self);
+  return cfp->iseq && !ifunc_p(cfp) && !NIL_P(cfp->self);
 }
 
 static rb_control_frame_t * find_valid_frame(rb_control_frame_t * cfp, rb_control_frame_t * limit_cfp) {
