@@ -24,6 +24,7 @@ threadptr_data_type(void)
 }
 
 #define ruby_thread_data_type *threadptr_data_type()
+#define ruby_threadptr_data_type *threadptr_data_type()
 
 #define ruby_current_thread ((rb_thread_t *)RTYPEDDATA_DATA(rb_thread_current()))
 
@@ -109,7 +110,10 @@ frametype_name(VALUE flag)
   case VM_FRAME_MAGIC_BLOCK:  return string2sym("block");
   case VM_FRAME_MAGIC_CLASS:  return string2sym("class");
   case VM_FRAME_MAGIC_TOP:    return string2sym("top");
+
+#if !defined(RUBY_200)    
   case VM_FRAME_MAGIC_FINISH: return string2sym("finish");
+#endif
   case VM_FRAME_MAGIC_CFUNC:  return string2sym("cfunc");
   case VM_FRAME_MAGIC_PROC:   return string2sym("proc");
   case VM_FRAME_MAGIC_IFUNC:  return string2sym("ifunc");
@@ -148,12 +152,19 @@ static VALUE binding_of_caller(VALUE self, VALUE rb_level)
     rb_raise(rb_eRuntimeError, "Can't create Binding Object on top of Fiber.");
 
   GetBindingPtr(bindval, bind);
+
+#if defined(RUBY_200)
+  bind->env = rb_vm_make_env_object(th, cfp);
+  bind->path = cfp->iseq->location.path;
+  bind->first_lineno = rb_vm_get_sourceline(cfp);
+#else
   bind->env = rb_vm_make_env_object(th, cfp);
   bind->filename = cfp->iseq->filename;
   bind->line_no = rb_vm_get_sourceline(cfp);
-
+#endif
+  
   rb_iv_set(bindval, "@frame_type", frametype_name(cfp->flag));
-  rb_iv_set(bindval, "@frame_description", cfp->iseq->name);
+  //  rb_iv_set(bindval, "@frame_description", cfp->iseq->name);
 
   return bindval;
 }
