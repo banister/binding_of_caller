@@ -107,6 +107,8 @@ task :reinstall => :gems do
   sh "gem install #{direc}/pkg/#{PROJECT_NAME}-#{BindingOfCaller::VERSION}.gem"
 end
 
+task :install => :reinstall
+
 desc "build all platform gems at once"
 task :gems => [:clean, :rmgems, "ruby:gem"]
 

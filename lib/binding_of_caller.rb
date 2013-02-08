@@ -1,7 +1,11 @@
 dlext = RbConfig::CONFIG['DLEXT']
-direc = File.dirname(__FILE__)
 
-if defined?(RUBY_ENGINE) && RUBY_ENGINE == "ruby" && RUBY_VERSION =~ /2\.0/
+def mri_2?
+  defined?(RUBY_ENGINE) && RUBY_ENGINE == "ruby" &&
+    RUBY_VERSION =~ /^2/
+end
+
+if mri_2?
   require 'binding_of_caller/ruby2'
 elsif defined?(RUBY_ENGINE) && RUBY_ENGINE == "ruby"
   require "binding_of_caller.#{dlext}"

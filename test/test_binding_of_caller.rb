@@ -54,7 +54,7 @@ describe BindingOfCaller do
         binding.of_caller(100)
       end
 
-      lambda { o.a }.should.raise RuntimeError
+      lambda { o.a }.should.raise ArgumentError
     end
   end
 
