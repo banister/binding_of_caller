@@ -29,16 +29,19 @@ module BindingOfCaller
           b = RubyVM::DebugInspector.open { |i| i.frame_binding(n) }
           iseq = RubyVM::DebugInspector.open { |i| i.frame_iseq(n) }
 
-          # apparently the 9th element of the iseq array holds the frame type
-          # ...not sure how reliable this is.
-          b.instance_variable_set(:@frame_type, iseq.to_a[9])
-          ary << b
+          if b
+            # apparently the 9th element of the iseq array holds the frame type
+            # ...not sure how reliable this is.
+            b.instance_variable_set(:@frame_type, iseq.to_a[9])
+            b.instance_variable_set(:@frame_description, iseq.label)
+            ary << b
+          end
          rescue ArgumentError
           break
         end
         n += 1
       end
-      ary.compact.drop(2)
+      ary.drop(2)
     end
 
     # Number of parent frames available at the point of call.
