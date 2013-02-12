@@ -7,7 +7,7 @@ module BindingOfCaller
     def of_caller(n)
       c = callers.drop(1)
       if n > (c.size - 1)
-        raise ArgumentError, "No such frame, gone beyond end of stack!"
+        raise "No such frame, gone beyond end of stack!"
       else
         c[n]
       end
