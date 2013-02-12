@@ -6,7 +6,7 @@ def mri_2?
 end
 
 if mri_2?
-  require 'binding_of_caller/ruby2'
+  require 'binding_of_caller/mri2'
 elsif defined?(RUBY_ENGINE) && RUBY_ENGINE == "ruby"
   require "binding_of_caller.#{dlext}"
 elsif defined?(Rubinius)

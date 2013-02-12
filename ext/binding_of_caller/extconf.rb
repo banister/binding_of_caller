@@ -1,10 +1,19 @@
 def fake_makefile
-  File.open(File.join(File.dirname(__FILE__), "Makefile"), "w") {|f|
+  File.open(File.join(File.dirname(__FILE__), "Makefile"), "w") do |f|
     f.puts %[install:\n\techo "Nada."]
-  }
+  end
 end
 
-if RUBY_ENGINE && RUBY_ENGINE =~ /rbx/
+def mri_2?
+  defined?(RUBY_ENGINE) && RUBY_ENGINE == "ruby" &&
+    RUBY_VERSION =~ /^2/
+end
+
+def rbx?
+  defined?(RUBY_ENGINE) && RUBY_ENGINE =~ /rbx/
+end
+
+if mri_2? || rbx?
   fake_makefile
 else
   require 'mkmf'
@@ -17,8 +26,6 @@ else
     $CFLAGS += " -I./ruby_headers/192/ -DRUBY_192"
   when /1.9.3/
     $CFLAGS += " -I./ruby_headers/193/ -DRUBY_193"
-  when /2.0.0/
-    $CFLAGS += " -I./ruby_headers/200/ -DRUBY_193 -DRUBY_200"
   end
 
   create_makefile('binding_of_caller')

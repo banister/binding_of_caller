@@ -2,22 +2,15 @@ require 'debug_inspector'
 
 module BindingOfCaller
   module BindingExtensions
-
     # Retrieve the binding of the nth caller of the current frame.
     # @return [Binding]
     def of_caller(n)
-      b = nil
-
-      j = n
-      loop do
-        b = RubyVM::DebugInspector.open do |i|
-          i.frame_binding(j + 4)
-        end
-        break if b
-        j += 1
+      c = callers.drop(1)
+      if n > (c.size - 1)
+        raise ArgumentError, "No such frame, gone beyond end of stack!"
+      else
+        c[n]
       end
-
-      b
     end
 
     # The description of the frame.
@@ -33,13 +26,19 @@ module BindingOfCaller
       n = 0
       loop do
         begin
-          ary << binding.of_caller(n)
+          b = RubyVM::DebugInspector.open { |i| i.frame_binding(n) }
+          iseq = RubyVM::DebugInspector.open { |i| i.frame_iseq(n) }
+
+          # apparently the 9th element of the iseq array holds the frame type
+          # ...not sure how reliable this is.
+          b.instance_variable_set(:@frame_type, iseq.to_a[9])
+          ary << b
          rescue ArgumentError
           break
         end
         n += 1
       end
-      ary.drop(3)
+      ary.compact.drop(2)
     end
 
     # Number of parent frames available at the point of call.
@@ -51,7 +50,7 @@ module BindingOfCaller
     # The type of the frame.
     # @return [Symbol]
     def frame_type
-      "N/A"
+      @frame_type
     end
 
   end
