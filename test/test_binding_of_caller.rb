@@ -4,6 +4,10 @@ unless Object.const_defined? :BindingOfCaller
   require 'binding_of_caller/version'
 end
 
+class Module
+  public :remove_const
+end
+
 puts "Testing binding_of_caller version #{BindingOfCaller::VERSION}..."
 puts "Ruby version: #{RUBY_VERSION}"
 
@@ -81,6 +85,27 @@ describe BindingOfCaller do
     end
   end
 
+  describe "frame_descripton" do
+    it 'describes a block frame' do
+      binding.of_caller(0).frame_description.should =~ /block/
+    end
+
+    it 'describes a method frame' do
+      o = Object.new
+      def o.horsey_malone
+        binding.of_caller(0).frame_description.should =~ /horsey_malone/
+      end
+      o.horsey_malone
+    end
+
+    it 'describes a class frame' do
+      class HorseyMalone
+        binding.of_caller(0).frame_description.should =~ /class/
+      end
+      Object.remove_const(:HorseyMalone)
+    end
+  end
+
   describe "frame_type" do
     it 'should return the correct frame types' do
       o = Object.new
@@ -101,6 +126,14 @@ describe BindingOfCaller do
       caller_bindings[0].frame_type.should == :block
       caller_bindings[1].frame_type.should == :method
       caller_bindings[2].frame_type.should == :method
+    end
+
+    it 'identifies a class frame' do
+      class HorseyMalone
+        binding.of_caller(0).frame_type.should == :class
+      end
+
+      Object.remove_const(:HorseyMalone)
     end
 
   end
