@@ -164,7 +164,7 @@ static VALUE binding_of_caller(VALUE self, VALUE rb_level)
 #endif
   
   rb_iv_set(bindval, "@frame_type", frametype_name(cfp->flag));
-  //  rb_iv_set(bindval, "@frame_description", cfp->iseq->name);
+  rb_iv_set(bindval, "@frame_description", cfp->iseq->name);
 
   return bindval;
 }
