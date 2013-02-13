@@ -27,7 +27,7 @@ def apply_spec_defaults(s)
   s.email = 'jrmair@gmail.com'
   s.description = s.summary
   s.require_path = 'lib'
-  s.add_dependency 'debug_inspector', '~> 0.0.1'
+  s.add_dependency 'debug_inspector', '>= 0.0.1'
   s.add_development_dependency 'bacon'
   s.add_development_dependency 'rake'
   s.homepage = "http://github.com/banister/binding_of_caller"

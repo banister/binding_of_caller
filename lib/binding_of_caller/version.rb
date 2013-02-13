@@ -1,3 +1,3 @@
 module BindingOfCaller
-  VERSION = "0.6.9pre2"
+  VERSION = "0.6.9pre3"
 end
