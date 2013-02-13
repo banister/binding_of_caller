@@ -27,9 +27,9 @@ module BindingOfCaller
       loop do
         begin
           b = RubyVM::DebugInspector.open { |i| i.frame_binding(n) }
-          iseq = RubyVM::DebugInspector.open { |i| i.frame_iseq(n) }
 
           if b
+            iseq = RubyVM::DebugInspector.open { |i| i.frame_iseq(n) }
             # apparently the 9th element of the iseq array holds the frame type
             # ...not sure how reliable this is.
             b.instance_variable_set(:@frame_type, iseq.to_a[9])
