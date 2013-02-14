@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = "binding_of_caller"
-  s.version = "0.6.9pre3"
+  s.version = "0.6.9"
 
-  s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
+  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["John Mair (banisterfiend)"]
-  s.date = "2013-02-13"
+  s.date = "2013-02-14"
   s.description = "Retrieve the binding of a method's caller. Can also retrieve bindings even further up the stack."
   s.email = "jrmair@gmail.com"
   s.extensions = ["ext/binding_of_caller/extconf.rb"]
