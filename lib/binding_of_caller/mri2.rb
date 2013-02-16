@@ -23,15 +23,15 @@ module BindingOfCaller
         loop do
           begin
             b = i.frame_binding(n) 
-
-            if b
-              iseq = i.frame_iseq(n) 
-              b.instance_variable_set(:@iseq, iseq)
-              ary << b
-            end
           rescue ArgumentError
             break
           end
+
+          if b
+            b.instance_variable_set(:@iseq, i.frame_iseq(n))
+            ary << b
+          end
+          
           n += 1
         end
       end
