@@ -23,22 +23,26 @@ module BindingOfCaller
     # @return [Array<Binding>]
     def callers
       ary = []
-      n = 0
-      loop do
-        begin
-          b = RubyVM::DebugInspector.open { |i| i.frame_binding(n) }
+    
+      RubyVM::DebugInspector.open do |i|
+        n = 0
+        loop do
+          begin
+            b = i.frame_binding(n) 
 
-          if b
-            iseq = RubyVM::DebugInspector.open { |i| i.frame_iseq(n) }
-            b.instance_variable_set(:@iseq, iseq)
-            ary << b
+            if b
+              iseq = i.frame_iseq(n) 
+              b.instance_variable_set(:@iseq, iseq)
+              ary << b
+            end
+          rescue ArgumentError
+            break
           end
-         rescue ArgumentError
-          break
+          n += 1
         end
-        n += 1
       end
-      ary.drop(2)
+      
+      ary.drop(1)
     end
 
     # Number of parent frames available at the point of call.
