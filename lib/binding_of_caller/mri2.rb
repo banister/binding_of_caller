@@ -16,7 +16,7 @@ module BindingOfCaller
     # The description of the frame.
     # @return [String]
     def frame_description
-      @frame_description
+      @frame_description ||= @iseq.label
     end
 
     # Return bindings for all caller frames.
@@ -30,10 +30,7 @@ module BindingOfCaller
 
           if b
             iseq = RubyVM::DebugInspector.open { |i| i.frame_iseq(n) }
-            # apparently the 9th element of the iseq array holds the frame type
-            # ...not sure how reliable this is.
-            b.instance_variable_set(:@frame_type, iseq.to_a[9])
-            b.instance_variable_set(:@frame_description, iseq.label)
+            b.instance_variable_set(:@iseq, iseq)
             ary << b
           end
          rescue ArgumentError
@@ -53,7 +50,9 @@ module BindingOfCaller
     # The type of the frame.
     # @return [Symbol]
     def frame_type
-      @frame_type
+      # apparently the 9th element of the iseq array holds the frame type
+      # ...not sure how reliable this is.
+      @frame_type ||= @iseq.to_a[9]
     end
 
   end
