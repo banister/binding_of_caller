@@ -84,8 +84,12 @@ describe BindingOfCaller do
       binding.frame_count.should == binding.callers.count
     end
   end
-
+  
   describe "frame_descripton" do
+    it 'can be called on ordinary binding without raising' do
+      lambda { binding.frame_description }.should.not.raise 
+    end
+    
     it 'describes a block frame' do
       binding.of_caller(0).frame_description.should =~ /block/
     end
@@ -107,6 +111,10 @@ describe BindingOfCaller do
   end
 
   describe "frame_type" do
+    it 'can be called on ordinary binding without raising' do
+      lambda { binding.frame_type }.should.not.raise 
+    end
+    
     it 'should return the correct frame types' do
       o = Object.new
 
