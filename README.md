@@ -3,9 +3,9 @@
 binding_of_caller
 ===========
 
-(C) John Mair (banisterfiend) 2011
+(C) John Mair (banisterfiend) 2012
 
-_Retrieve the binding of a method's caller in MRI 1.9.2+, and RBX (Rubinius)_
+_Retrieve the binding of a method's caller in MRI 1.9.2+, MRI 2.0 and RBX (Rubinius)_
 
 The `binding_of_caller` gem provides the `Binding#of_caller` method.
 
@@ -15,7 +15,7 @@ call stack, not limited to just the immediate caller.
 
 **Recommended for use only in debugging situations. Do not use this in production apps.**
 
-**Only works in MRI Ruby 1.9.2, 1.9.3 and RBX (Rubinius)**
+**Only works in MRI Ruby 1.9.2, 1.9.3, 2.0 and RBX (Rubinius)**
 
 * Install the [gem](https://rubygems.org/gems/binding_of_caller): `gem install binding_of_caller`
 * See the [source code](http://github.com/banister/binding_of_caller)
@@ -52,7 +52,7 @@ This project is a spinoff from the [Pry REPL project.](http://pry.github.com)
 Features and limitations
 -------------------------
 
-* Only works with MRI 1.9.2, 1.9.3 and RBX (Rubinius)
+* Only works with MRI 1.9.2, 1.9.3, 2.0 and RBX (Rubinius)
 * Does not work in 1.8.7, but there is a well known (continuation-based) hack to get a `Binding#of_caller` there.
 
 Contact
@@ -66,7 +66,7 @@ License
 
 (The MIT License)
 
-Copyright (c) 2011 (John Mair)
+Copyright (c) 2012 (John Mair)
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
