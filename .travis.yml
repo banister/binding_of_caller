@@ -3,7 +3,6 @@ rvm:
   - 1.9.3
   - 2.0.0
   - rbx-19mode
-  - ruby-head
 
 notifications:
   irc: "irc.freenode.org#pry"
