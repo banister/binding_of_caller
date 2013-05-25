@@ -9,7 +9,7 @@ module BindingOfCaller
       b = Binding.setup(
                         bt.variables,
                         bt.variables.method,
-                        bt.static_scope,
+                        bt.constant_scope,
                         bt.variables.self,
                         bt
                         )
