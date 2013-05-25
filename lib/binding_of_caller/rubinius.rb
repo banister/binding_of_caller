@@ -6,6 +6,8 @@ module BindingOfCaller
     def of_caller(n)
       bt = Rubinius::VM.backtrace(1 + n, true).first
 
+      raise RuntimeError, "Invalid frame, gone beyond end of stack!" if bt.nil?
+
       b = Binding.setup(
                         bt.variables,
                         bt.variables.method,
@@ -17,8 +19,6 @@ module BindingOfCaller
       b.instance_variable_set(:@frame_description, bt.describe)
 
       b
-    rescue
-      raise RuntimeError, "Invalid frame, gone beyond end of stack!"
     end
 
     # The description of the frame.
