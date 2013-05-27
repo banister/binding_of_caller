@@ -84,12 +84,12 @@ describe BindingOfCaller do
       binding.frame_count.should == binding.callers.count
     end
   end
-  
+
   describe "frame_descripton" do
     it 'can be called on ordinary binding without raising' do
       lambda { binding.frame_description }.should.not.raise 
     end
-    
+
     it 'describes a block frame' do
       binding.of_caller(0).frame_description.should =~ /block/
     end
@@ -114,36 +114,40 @@ describe BindingOfCaller do
     it 'can be called on ordinary binding without raising' do
       lambda { binding.frame_type }.should.not.raise 
     end
-    
-    it 'should return the correct frame types' do
-      o = Object.new
 
-      # method frame
-      def o.a
-        b
+    describe "when inside a class definition" do
+      before do
+        class HorseyMalone
+          @binding = binding.of_caller(0)
+          def self.binding; @binding; end
+        end
+        @binding = HorseyMalone.binding
       end
 
-      # method frame
-      def o.b
-        # block frame
-        proc do
-          binding.callers
-        end.call
+      it 'returns :class' do
+        @binding.frame_type.should == :class
       end
-      caller_bindings = o.a
-      caller_bindings[0].frame_type.should == :block
-      caller_bindings[1].frame_type.should == :method
-      caller_bindings[2].frame_type.should == :method
     end
 
-    it 'identifies a class frame' do
-      class HorseyMalone
-        binding.of_caller(0).frame_type.should == :class
-      end
+    describe "when inside a block" do
+      before { @binding = proc { binding.of_caller(0) }.call }
 
-      Object.remove_const(:HorseyMalone)
+      it 'returns :block' do
+        @binding.frame_type.should == :block
+      end
     end
 
+    describe "when inside an instance method" do
+      before do
+        o = Object.new
+        def o.a; binding.of_caller(0); end
+        @binding = o.a;
+      end
+
+      it 'returns :method' do
+        @binding.frame_type.should == :method
+      end
+    end
   end
 end
 
