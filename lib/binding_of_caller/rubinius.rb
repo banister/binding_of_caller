@@ -54,20 +54,16 @@ module BindingOfCaller
     # The type of the frame.
     # @return [Symbol]
     def frame_type
-      case self.variables.method.metadata.to_a.first.to_s
-      when /block/
+      if compiled_code.for_module_body?
+        :class
+      elsif compiled_code.is_block?
         :block
-      when /eval/
-        :eval
+      elsif compiled_code.describe =~ /^method/
+        :method
       else
-        if frame_description =~ /__(?:class|module)_init__/
-          :class
-        else
-          :method
-        end
+        :eval
       end
     end
-
   end
 end
 
