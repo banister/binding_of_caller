@@ -104,7 +104,7 @@ describe BindingOfCaller do
 
     it 'describes a class frame' do
       class HorseyMalone
-        binding.of_caller(0).frame_description.should =~ /class/
+        binding.of_caller(0).frame_description.should =~ /class/i
       end
       Object.remove_const(:HorseyMalone)
     end
