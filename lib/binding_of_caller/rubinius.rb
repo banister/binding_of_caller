@@ -16,7 +16,8 @@ module BindingOfCaller
                         bt
                         )
 
-      b.instance_variable_set(:@frame_description, bt.describe)
+      b.instance_variable_set :@frame_description,
+                              bt.describe.gsub("{ } in", "block in")
 
       b
     end
