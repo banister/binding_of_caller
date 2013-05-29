@@ -129,6 +129,14 @@ describe BindingOfCaller do
       end
     end
 
+    describe "when evaluated" do
+      before { @binding = eval("binding.of_caller(0)") }
+
+      it 'returns :eval' do
+        @binding.frame_type.should == :eval
+      end
+    end
+
     describe "when inside a block" do
       before { @binding = proc { binding.of_caller(0) }.call }
 
