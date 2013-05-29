@@ -56,12 +56,12 @@ module BindingOfCaller
     def frame_type
       if compiled_code.for_module_body?
         :class
+      elsif compiled_code.for_eval?
+        :eval
       elsif compiled_code.is_block?
         :block
-      elsif compiled_code.describe =~ /^method/
-        :method
       else
-        :eval
+        :method
       end
     end
   end
