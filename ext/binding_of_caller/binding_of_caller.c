@@ -2,7 +2,7 @@
 
 #include <ruby.h>
 #include "vm_core.h"
-#include "gc.h"
+#include "rubys_gc.h"
 
 typedef enum { false, true } bool;
 
