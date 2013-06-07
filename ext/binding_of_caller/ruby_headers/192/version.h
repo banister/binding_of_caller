@@ -1,13 +1,5 @@
 #define RUBY_VERSION "1.9.2"
-<<<<<<< HEAD
-<<<<<<< HEAD
-#define RUBY_PATCHLEVEL 34
-=======
-#define RUBY_PATCHLEVEL 27
->>>>>>> 7f5d559... merges r29155 from trunk into ruby_1_9_2. fixes #3777, #3772 and #3722.
-=======
 #define RUBY_PATCHLEVEL 30
->>>>>>> 13fdd22... merges r29188 from trunk into ruby_1_9_2.
 #define RUBY_VERSION_MAJOR 1
 #define RUBY_VERSION_MINOR 9
 #define RUBY_VERSION_TEENY 1
