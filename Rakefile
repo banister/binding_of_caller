@@ -46,7 +46,7 @@ task :default => [:test]
 
 desc "Run tests"
 task :test do
-  unless defined?(Rubinius)
+  unless defined?(Rubinius) or defined?(JRuby)
     Rake::Task['compile'].execute
   end
 
