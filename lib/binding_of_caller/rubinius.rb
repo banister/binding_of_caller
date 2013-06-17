@@ -49,7 +49,7 @@ module BindingOfCaller
     # Number of parent frames available at the point of call.
     # @return [Fixnum]
     def frame_count
-      callers.size - 1
+      Rubinius::VM.backtrace(1).count
     end
 
     # The type of the frame.
