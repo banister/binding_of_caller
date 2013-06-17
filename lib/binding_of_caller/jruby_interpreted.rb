@@ -34,17 +34,7 @@ module BindingOfCaller
     end
 
     def callers
-      ary = []
-      n = 2
-      loop do
-        begin
-          ary << Binding.of_caller(n)
-        rescue
-          break
-        end
-        n += 1
-      end
-      ary
+      (1..(frame_count-1)).map {|n| Binding.of_caller(n+1)}
     end
 
     def frame_count
