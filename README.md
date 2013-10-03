@@ -54,6 +54,9 @@ Features and limitations
 
 * Only works with MRI 1.9.2, 1.9.3, 2.0 and RBX (Rubinius)
 * Does not work in 1.8.7, but there is a well known (continuation-based) hack to get a `Binding#of_caller` there.
+* There is experimental support for jruby, but it only works in interpreted
+mode (i.e. use the option `-Djruby.compile.mode=OFF` or append
+`compile.mode=OFF` to your `.jrubyrc`)
 
 Contact
 -------
