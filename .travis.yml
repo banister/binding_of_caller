@@ -13,6 +13,13 @@ branches:
   only:
     - master
 
+matrix:
+  include:
+    - rvm: jruby
+      env: JRUBY_OPTS=-C-X
+  allow_failures:
+    - rvm: jruby
+
 #script: rake test --trace
 #
 #before_install:
