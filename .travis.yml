@@ -16,7 +16,7 @@ branches:
 matrix:
   include:
     - rvm: jruby
-      env: JRUBY_OPTS=-C-X
+      env: JRUBY_OPTS=-X-C
   allow_failures:
     - rvm: jruby
 
