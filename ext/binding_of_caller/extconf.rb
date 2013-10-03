@@ -4,18 +4,12 @@ def fake_makefile
   end
 end
 
-def mri_2?
+def mri_1_9?
   defined?(RUBY_ENGINE) && RUBY_ENGINE == "ruby" &&
-    RUBY_VERSION =~ /^2/
+    RUBY_VERSION =~ /^1\.9/
 end
 
-def rbx?
-  defined?(RUBY_ENGINE) && RUBY_ENGINE =~ /rbx/
-end
-
-if mri_2? || rbx?
-  fake_makefile
-else
+if mri_1_9?
   require 'mkmf'
 
   $CFLAGS += " -O0"
@@ -29,5 +23,6 @@ else
   end
 
   create_makefile('binding_of_caller')
+else
+  fake_makefile
 end
-
