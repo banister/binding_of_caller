@@ -17,6 +17,9 @@ class org::jruby::runtime::ThreadContext
     raise RuntimeError, "Invalid frame, gone beyond end of stack!" if index > frameIndex
 
     frame = frameStack[frameIndex - index]
+
+    return binding_of_caller(index - 1) if index > scopeIndex
+
     scope = scopeStack[scopeIndex - index]
     element = backtrace[backtraceIndex - index]
 
