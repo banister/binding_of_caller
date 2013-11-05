@@ -37,11 +37,17 @@ module BindingOfCaller
     end
 
     def callers
-      (1..(frame_count-1)).map {|n| Binding.of_caller(n+1)}
+      ary = []
+      n = 2
+      loop do
+        ary << of_caller(n) rescue break
+        n += 1
+      end
+      ary
     end
 
     def frame_count
-      JRuby.runtime.current_context.frame_count - 1
+      callers.count - 1
     end
   end
 end
