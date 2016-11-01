@@ -2,7 +2,10 @@ rvm:
   - 1.9.2
   - 1.9.3
   - 2.0.0
-  - 2.1.0
+  - 2.1.10
+  - 2.2.5
+  - 2.3.1
+  - ruby-head
   - rbx-19mode
 
 notifications:
