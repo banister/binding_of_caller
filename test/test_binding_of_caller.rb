@@ -58,7 +58,7 @@ describe BindingOfCaller do
         binding.of_caller(100)
       end
 
-      lambda { o.a }.should.raise RuntimeError
+      lambda { o.a }.should raise_error(RuntimeError)
     end
   end
 
@@ -87,7 +87,7 @@ describe BindingOfCaller do
 
   describe "frame_descripton" do
     it 'can be called on ordinary binding without raising' do
-      lambda { binding.frame_description }.should.not.raise 
+      lambda { binding.frame_description }.should_not raise_error
     end
 
     it 'describes a block frame' do
@@ -112,7 +112,7 @@ describe BindingOfCaller do
 
   describe "frame_type" do
     it 'can be called on ordinary binding without raising' do
-      lambda { binding.frame_type }.should.not.raise 
+      lambda { binding.frame_type }.should_not raise_error
     end
 
     describe "when inside a class definition" do
