@@ -6,7 +6,9 @@ module BindingOfCaller
     def of_caller(n)
       location = Rubinius::VM.backtrace(1 + n, true).first
 
-      raise RuntimeError, "Invalid frame, gone beyond end of stack!" if location.nil?
+      if location.nil?
+        raise RuntimeError, "Invalid frame, gone beyond end of stack!"
+      end
 
       setup_binding_from_location(location)
     end
@@ -20,8 +22,7 @@ module BindingOfCaller
     # Return bindings for all caller frames.
     # @return [Array<Binding>]
     def callers
-      Rubinius::VM.backtrace(1, true).map &(method(:setup_binding_from_location).
-                                            to_proc)
+      Rubinius::VM.backtrace(1, true).map{|l| setup_binding_from_location(l)}
     end
 
     # Number of parent frames available at the point of call.
