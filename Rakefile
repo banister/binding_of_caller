@@ -89,7 +89,7 @@ end
 
 desc "build the binaries"
 task :compile => :cleanup do
-  if !mri_2?  
+  if !mri_2?
     chdir "./ext/binding_of_caller/" do
       sh "ruby extconf.rb"
       sh "make"
@@ -103,7 +103,7 @@ task :cleanup do
   if !mri_2?
     sh 'rm -rf lib/binding_of_caller.so'
     chdir "./ext/binding_of_caller/" do
-      sh 'make clean' 
+      sh 'make clean'
     end
   end
 end
