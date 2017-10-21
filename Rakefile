@@ -51,7 +51,7 @@ task :test do
   end
 
   $stdout.puts("\033[33m")
-  sh "bacon -Itest -rubygems -a -q"
+  sh "bacon -Itest -r rubygems -a -q"
   $stdout.puts("\033[0m")
 
   unless defined?(Rubinius)
@@ -89,7 +89,7 @@ end
 
 desc "build the binaries"
 task :compile => :cleanup do
-  if !mri_2?  
+  if !mri_2?
     chdir "./ext/binding_of_caller/" do
       sh "ruby extconf.rb"
       sh "make"
@@ -103,7 +103,7 @@ task :cleanup do
   if !mri_2?
     sh 'rm -rf lib/binding_of_caller.so'
     chdir "./ext/binding_of_caller/" do
-      sh 'make clean' 
+      sh 'make clean'
     end
   end
 end
