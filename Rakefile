@@ -51,7 +51,7 @@ task :test do
   end
 
   $stdout.puts("\033[33m")
-  sh "bacon -Itest -rubygems -a -q"
+  sh "bacon -Itest -r rubygems -a -q"
   $stdout.puts("\033[0m")
 
   unless defined?(Rubinius)
