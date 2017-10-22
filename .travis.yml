@@ -1,6 +1,6 @@
 rvm:
   - 1.9.2
-  - 1.9.3-p551
+  - 1.9.3
   - 2.0.0
   - 2.1.0
   - 2.2.6
@@ -22,6 +22,7 @@ matrix:
       env: JRUBY_OPTS=-X-C
   allow_failures:
     - rvm: jruby
+    - rvm: 1.9.3
 
 #script: rake test --trace
 #
