@@ -27,8 +27,8 @@ matrix:
 
 #script: rake test --trace
 #
-#before_install:
-#  - gem update --system
+before_install:
+  - gem update --system
 #  - gem --version
 #  - gem install rake bacon
 #  - rake gem
