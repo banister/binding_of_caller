@@ -17,25 +17,19 @@ module BindingOfCaller
     # @return [Array<Binding>]
     def callers
       ary = []
-    
-      RubyVM::DebugInspector.open do |i|
-        n = 0
-        loop do
-          begin
-            b = i.frame_binding(n) 
-          rescue ArgumentError
-            break
-          end
 
+      RubyVM::DebugInspector.open do |dc|
+        locs = dc.backtrace_locations
+
+        locs.size.times do |i|
+          b = dc.frame_binding(i)
           if b
-            b.instance_variable_set(:@iseq, i.frame_iseq(n))
+            b.instance_variable_set(:@iseq, dc.frame_iseq(i))
             ary << b
           end
-          
-          n += 1
         end
       end
-      
+
       ary.drop(1)
     end
 
