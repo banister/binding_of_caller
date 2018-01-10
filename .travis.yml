@@ -6,6 +6,7 @@ rvm:
   - 2.2.6
   - 2.3.0
   - 2.4.0
+  - 2.5.0
 
 notifications:
   irc: "irc.freenode.org#pry"
@@ -26,8 +27,8 @@ matrix:
 
 #script: rake test --trace
 #
-#before_install:
-#  - gem update --system
+before_install:
+  - gem update --system
 #  - gem --version
 #  - gem install rake bacon
 #  - rake gem
