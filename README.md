@@ -1,4 +1,4 @@
-[![Build Status](https://secure.travis-ci.org/banister/binding_of_caller.png)](http://travis-ci.org/banister/binding_of_caller)
+[![Build Status](https://api.travis-ci.org/banister/binding_of_caller.svg)](https://travis-ci.org/banister/binding_of_caller)
 
 binding_of_caller
 ===========
@@ -18,7 +18,7 @@ call stack, not limited to just the immediate caller.
 **Works in MRI Ruby (>= 1.9.2) and RBX (Rubinius)**
 
 * Install the [gem](https://rubygems.org/gems/binding_of_caller): `gem install binding_of_caller`
-* See the [source code](http://github.com/banister/binding_of_caller)
+* See the [source code](https://github.com/banister/binding_of_caller)
 
 Example: Modifying a local inside the caller of a caller
 --------
@@ -61,7 +61,7 @@ mode (i.e. use the option `-Djruby.compile.mode=OFF` or append
 Contact
 -------
 
-Problems or questions contact me at [github](http://github.com/banister)
+Problems or questions contact me at [github](https://github.com/banister)
 
 
 License

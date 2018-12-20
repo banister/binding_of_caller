@@ -10,7 +10,7 @@ and some minor enhancements.
 
     For JRuby this will avoid crashes on gem installation.
 
-    This was alredy being checked for Rubinius.
+    This was already being checked for Rubinius.
 
     *Amadeus Folego*
 
