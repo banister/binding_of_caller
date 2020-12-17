@@ -1,4 +1,5 @@
-[![Build Status](https://secure.travis-ci.org/banister/binding_of_caller.png)](http://travis-ci.org/banister/binding_of_caller)
+[![Build Status](https://github.com/banister/binding_of_caller/workflows/test/badge.svg?event=push&branch=master)](https://github.com/banister/binding_of_caller/actions?query=branch%3Amaster)
+[![Gem Version](https://img.shields.io/gem/v/binding_of_caller.svg)](https://rubygems.org/gems/binding_of_caller)
 
 binding_of_caller
 =================
