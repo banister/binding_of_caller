@@ -13,9 +13,16 @@ CLEAN.include("ext/**/*.#{dlext}", "ext/**/*.log", "ext/**/*.o",
               "ext/**/*~", "ext/**/*#*", "ext/**/*.obj", "**/*#*", "**/*#*.*",
               "ext/**/*.def", "ext/**/*.pdb", "**/*_flymake*.*", "**/*_flymake", "**/*.rbc")
 
+def mri?
+  defined?(RUBY_ENGINE) && RUBY_ENGINE == "ruby"
+end
+
 def mri_2?
-  defined?(RUBY_ENGINE) && RUBY_ENGINE == "ruby" &&
-    RUBY_VERSION =~ /^2/
+  mri? && RUBY_VERSION =~ /^2/
+end
+
+def mri_3?
+  mri? && RUBY_VERSION =~ /^3/
 end
 
 def apply_spec_defaults(s)
@@ -89,7 +96,7 @@ end
 
 desc "build the binaries"
 task :compile => :cleanup do
-  if !mri_2?
+  if !mri_2? && !mri_3?
     chdir "./ext/binding_of_caller/" do
       sh "ruby extconf.rb"
       sh "make"
@@ -100,7 +107,7 @@ end
 
 desc 'cleanup the extensions'
 task :cleanup do
-  if !mri_2?
+  if !mri_2? && !mri_3?
     sh 'rm -rf lib/binding_of_caller.so'
     chdir "./ext/binding_of_caller/" do
       sh 'make clean'
