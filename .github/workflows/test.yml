@@ -97,4 +97,7 @@ jobs:
       run: bundle exec ruby -e "require 'binding_of_caller'"
 
     - name: Test gem functionality
+      if: ${{ matrix.ruby != 'jruby' && matrix.ruby != 'truffleruby' }}
       run: bundle exec ruby -e "require 'binding_of_caller'; binding.of_caller(0).eval('var = :hello')"
+      env:
+        JRUBY_OPTS: "--dev" # This will support JRuby once the gem is updated to support JRuby 9.x
