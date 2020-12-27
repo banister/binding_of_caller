@@ -11,6 +11,7 @@ on:
 
 jobs:
   test:
+    name: "Unit"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -23,7 +24,7 @@ jobs:
           - "2.5"
           - "2.6"
           - "2.7"
-          - "3.0.0-preview2"
+          - "3.0"
 
     steps:
 
@@ -37,3 +38,63 @@ jobs:
 
     - name: Test
       run: bundle exec rspec -f doc
+
+  system:
+    name: "System"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-latest
+          - ubuntu-latest
+          - windows-latest
+        ruby:
+          - "2"
+          - "3.0"
+          - "jruby"
+          - "truffleruby"
+        exclude:
+          # Windows releases of jruby and truffleruby have issues. Skip them for now.
+          - { ruby: "jruby", os: "windows-latest" }
+          - { ruby: "truffleruby", os: "windows-latest" }
+
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - name: Determine ruby version name
+      id: ruby_version
+      run: |
+        if [[ $OS == 'windows-latest' && $RUBY == '3.0' ]]; then
+          # Windows doesn't have 3.0, so run head there but nowhere else.
+          echo "::set-output name=release::head"
+        else
+          echo "::set-output name=release::$RUBY"
+        fi
+      shell: bash
+      env:
+        OS: ${{ matrix.os }}
+        RUBY: ${{ matrix.ruby }}
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ steps.ruby_version.outputs.release }}
+        bundler-cache: true
+
+    - name: Install gem
+      run: bundle exec rake install
+
+    - name: Create directory for gem test
+      run: mkdir -p tmp/gem-test
+
+    - name: Create test Gemfile
+      run: echo "gem 'binding_of_caller'" > Gemfile
+      working-directory: ./tmp/gem-test
+
+    - name: Test gem load
+      run: bundle exec ruby -e "require 'binding_of_caller'"
+
+    - name: Test gem functionality
+      run: bundle exec ruby -e "require 'binding_of_caller'; binding.of_caller(0).eval('var = :hello')"
