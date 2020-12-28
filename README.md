@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/banister/binding_of_caller/workflows/test/badge.svg?event=push&branch=master)](https://github.com/banister/binding_of_caller/actions?query=branch%3Amaster)
+[![Build Status](https://github.com/banister/binding_of_caller/workflows/Test/badge.svg?branch=master&event=push)](https://github.com/banister/binding_of_caller/actions?query=branch%3Amaster)
 [![Gem Version](https://img.shields.io/gem/v/binding_of_caller.svg)](https://rubygems.org/gems/binding_of_caller)
 
 binding_of_caller
