@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{Retrieve the binding of a method's caller. Can also retrieve bindings even further up the stack.}
   spec.description   = spec.summary
-  spec.homepage         = "https://github.com/banister/binding_of_caller"
+  spec.homepage      = "https://github.com/banister/binding_of_caller"
   spec.license       = "MIT"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.0.0")
 
