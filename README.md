@@ -1,7 +1,8 @@
-[![Build Status](https://secure.travis-ci.org/banister/binding_of_caller.png)](http://travis-ci.org/banister/binding_of_caller)
+[![Build Status](https://github.com/banister/binding_of_caller/workflows/test/badge.svg?event=push&branch=master)](https://github.com/banister/binding_of_caller/actions?query=branch%3Amaster)
+[![Gem Version](https://img.shields.io/gem/v/binding_of_caller.svg)](https://rubygems.org/gems/binding_of_caller)
 
 binding_of_caller
-===========
+=================
 
 (C) John Mair (banisterfiend) 2012
 
@@ -57,6 +58,13 @@ Features and limitations
 * There is experimental support for jruby 1.7.x, but it only works in interpreted
 mode (i.e. use the option `-Djruby.compile.mode=OFF` or append
 `compile.mode=OFF` to your `.jrubyrc`)
+
+Development
+-----------
+
+After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+
+To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 Contact
 -------
