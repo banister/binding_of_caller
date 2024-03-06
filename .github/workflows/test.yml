@@ -25,6 +25,9 @@ jobs:
           - "2.6"
           - "2.7"
           - "3.0"
+        exclude:
+          # 2.2 segfaults on recent Ubuntu: https://github.com/ruby/setup-ruby/issues/496
+          - { ruby: "2.2" }
 
     steps:
 
