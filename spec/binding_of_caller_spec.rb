@@ -77,7 +77,7 @@ RSpec.describe BindingOfCaller do
     end
   end
 
-  describe "#frame_descripton" do
+  describe "#frame_description" do
     it 'can be called on ordinary binding without raising' do
       expect { binding.frame_description }.not_to raise_error
     end
