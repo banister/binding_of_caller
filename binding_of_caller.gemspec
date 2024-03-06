@@ -31,5 +31,5 @@ TXT
 
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "debug_inspector", ">= 0.0.1"
+  spec.add_dependency "debug_inspector", ">= 1.2.0"
 end
