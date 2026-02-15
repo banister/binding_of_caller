@@ -53,7 +53,8 @@ This project is a spinoff from the [Pry REPL project.](http://pry.github.com)
 Features and limitations
 -------------------------
 
-* Works in MRI (>= 2.0.0) and RBX (Rubinius)
+* Works in MRI (>= 2.7.0) and RBX (Rubinius)
+* For MRI < 2.7, use version "~> 1.0.0" of the gem
 * For MRI 1.9.x, use version "~> 0.8" of the gem, which included support for MRI before 2.0.
 * Does not work in 1.8.7, but there is a well known (continuation-based) hack to get a `Binding#of_caller` there.
 * There is experimental support for jruby 1.7.x, but it only works in interpreted
