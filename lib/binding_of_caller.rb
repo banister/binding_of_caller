@@ -1,7 +1,7 @@
 require "binding_of_caller/version"
 
 if defined?(RUBY_ENGINE) && RUBY_ENGINE == "ruby"
-  if RUBY_VERSION =~ /^[23]/
+  if RUBY_VERSION =~ /^[234]/
     require 'binding_of_caller/mri'
   else
     puts "This version of binding_of_caller doesn't support this version of Ruby"
