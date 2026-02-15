@@ -17,7 +17,7 @@ Recommended for use only in debugging situations. Do not use this in production 
 TXT
   spec.homepage      = "https://github.com/banister/binding_of_caller"
   spec.license       = "MIT"
-  spec.required_ruby_version = Gem::Requirement.new(">= 2.0.0")
+  spec.required_ruby_version = ">= 2.7.0"
 
   spec.metadata = {
     "changelog_uri"  => "https://github.com/banister/binding_of_caller/releases",
